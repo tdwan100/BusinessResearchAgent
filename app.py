@@ -7,6 +7,7 @@ import re
 import streamlit as st
 
 from services.workflow_service import WorkflowService
+from utils.config import load_runtime_config, missing_api_key_message
 from utils.report_formatting import to_markdown
 
 
@@ -41,7 +42,14 @@ with st.sidebar:
     )
     run_clicked = st.button("Run Analysis", type="primary", use_container_width=True)
 
+    st.caption("LLM key env var: `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY` / `GROQ_API_KEY`).")
+
+runtime_config = load_runtime_config()
+
 st.markdown("---")
+
+if not runtime_config.llm_api_key:
+    st.warning(missing_api_key_message())
 
 if "report_markdown" not in st.session_state:
     st.session_state.report_markdown = ""

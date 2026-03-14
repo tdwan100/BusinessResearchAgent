@@ -30,6 +30,19 @@ A polished Streamlit demo app that uses a 4-agent CrewAI workflow to analyze a c
 └── requirements.txt
 ```
 
+## Environment Variables
+
+Set at least one LLM provider key before running:
+
+```bash
+export OPENAI_API_KEY="your_key_here"
+# optional alternatives
+# export ANTHROPIC_API_KEY="your_key_here"
+# export GROQ_API_KEY="your_key_here"
+```
+
+You can also place these in a local `.env` file in the project root.
+
 ## Run
 
 ```bash
