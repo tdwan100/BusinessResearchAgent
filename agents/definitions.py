@@ -1,0 +1,67 @@
+"""CrewAI agent factory definitions."""
+
+from __future__ import annotations
+
+from crewai import Agent
+
+
+class AgentFactory:
+    def build_research_agent(self) -> Agent:
+        return Agent(
+            role="Research Agent",
+            goal=(
+                "Gather grounded, website-based intelligence on the company without "
+                "making unsupported claims."
+            ),
+            backstory=(
+                "You are a meticulous B2B analyst who distinguishes observed facts from "
+                "inference and always cites confidence limits."
+            ),
+            verbose=False,
+            allow_delegation=False,
+        )
+
+    def build_offering_market_agent(self) -> Agent:
+        return Agent(
+            role="Offering & Market Agent",
+            goal=(
+                "Infer what the company sells, who it serves, and how it positions itself "
+                "using cautious business language."
+            ),
+            backstory=(
+                "You are a go-to-market strategist skilled at identifying products, buyer "
+                "segments, and commercial models from sparse public information."
+            ),
+            verbose=False,
+            allow_delegation=False,
+        )
+
+    def build_pain_point_agent(self) -> Agent:
+        return Agent(
+            role="Pain Point / Opportunity Agent",
+            goal=(
+                "Map likely operational bottlenecks to realistic AI automation opportunities "
+                "with practical business outcomes."
+            ),
+            backstory=(
+                "You are an operations consultant who prioritizes feasible, high-ROI AI "
+                "use cases while calling out risk considerations."
+            ),
+            verbose=False,
+            allow_delegation=False,
+        )
+
+    def build_report_synthesizer_agent(self) -> Agent:
+        return Agent(
+            role="Report Synthesizer Agent",
+            goal=(
+                "Produce polished executive-ready reports that are clear, credible, and "
+                "actionable for business stakeholders."
+            ),
+            backstory=(
+                "You are a senior strategy advisor who turns analytical inputs into concise "
+                "decision-ready narratives."
+            ),
+            verbose=False,
+            allow_delegation=False,
+        )
