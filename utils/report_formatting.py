@@ -12,8 +12,10 @@ def to_markdown(report: FinalReport) -> str:
         ("Products / Services", report.products_services),
         ("Target Market", report.target_market),
         ("Market Positioning", report.market_positioning),
+        ("Overlooked Signals / Non-Obvious Insights", report.overlooked_signals),
         ("Likely Operational Bottlenecks", report.likely_operational_bottlenecks),
         ("AI Automation Opportunities", report.ai_automation_opportunities),
+        ("90-Day Prioritized AI Roadmap", report.prioritized_ai_roadmap),
         ("Suggested Engagement Angle", report.suggested_engagement_angle),
     ]
 
