@@ -56,7 +56,7 @@ class WebsiteFetcher:
 class PageSelector:
     """Selects likely high-signal pages from homepage links."""
 
-    PRIORITY_TOKENS = (
+    HIGH_SIGNAL_TOKENS = (
         "about",
         "company",
         "services",
@@ -65,13 +65,31 @@ class PageSelector:
         "platform",
         "industries",
         "customers",
+        "case-study",
+        "case-studies",
+        "resources",
+        "blog",
+        "news",
+        "pricing",
     )
 
-    def extract_priority_urls(self, homepage_html: str, base_url: str, max_pages: int = 5) -> list[str]:
+    OVERLOOKED_SIGNAL_TOKENS = (
+        "careers",
+        "jobs",
+        "privacy",
+        "security",
+        "compliance",
+        "terms",
+        "faq",
+        "support",
+        "documentation",
+    )
+
+    def extract_priority_urls(self, homepage_html: str, base_url: str, max_pages: int = 8) -> list[str]:
         soup = BeautifulSoup(homepage_html, "html.parser")
         base_domain = urlparse(base_url).netloc
 
-        candidates: list[str] = []
+        scored_candidates: list[tuple[int, str]] = []
         for anchor in soup.find_all("a", href=True):
             absolute = urljoin(base_url, anchor["href"])
             parsed = urlparse(absolute)
@@ -79,12 +97,17 @@ class PageSelector:
                 continue
 
             path = parsed.path.lower()
-            if any(token in path for token in self.PRIORITY_TOKENS):
-                candidates.append(absolute.split("#")[0])
+            score = 0
+            if any(token in path for token in self.HIGH_SIGNAL_TOKENS):
+                score += 2
+            if any(token in path for token in self.OVERLOOKED_SIGNAL_TOKENS):
+                score += 1
+            if score:
+                scored_candidates.append((score, absolute.split("#")[0]))
 
-        deduped = []
+        deduped: list[str] = []
         seen = set()
-        for url in candidates:
+        for _, url in sorted(scored_candidates, key=lambda item: item[0], reverse=True):
             if url not in seen:
                 seen.add(url)
                 deduped.append(url)
@@ -97,6 +120,6 @@ class PageSelector:
 class TextCleaner:
     """Simple text clean-up helper to reduce prompt noise."""
 
-    def clean(self, text: str, max_chars: int = 12000) -> str:
+    def clean(self, text: str, max_chars: int = 6000) -> str:
         normalized = " ".join(text.split())
         return normalized[:max_chars]

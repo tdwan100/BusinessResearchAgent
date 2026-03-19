@@ -71,7 +71,9 @@ class FinalReport(BaseModel):
     products_services: str
     target_market: str
     market_positioning: str
+    overlooked_signals: str
     likely_operational_bottlenecks: str
     ai_automation_opportunities: str
+    prioritized_ai_roadmap: str
     suggested_engagement_angle: str
     disclaimer: str

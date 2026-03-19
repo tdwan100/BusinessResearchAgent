@@ -79,6 +79,11 @@ class WorkflowService:
                 "The brand appears to position itself on expertise, reliability, and outcomes. "
                 "Further competitor analysis would sharpen differentiation insights."
             ),
+            overlooked_signals=(
+                "A useful next step is to inspect less-prominent pages (careers, terms, changelog, "
+                "resources) for hidden signals about delivery model, data maturity, and go-to-market "
+                "constraints that are often missed in homepage-only reviews."
+            ),
             likely_operational_bottlenecks=(
                 "Likely bottlenecks include repetitive lead qualification, fragmented customer "
                 "communication, and manual knowledge retrieval for teams."
@@ -86,6 +91,11 @@ class WorkflowService:
             ai_automation_opportunities=(
                 "Practical opportunities likely include AI-assisted inbound triage, proposal "
                 "drafting copilots, and internal knowledge assistants tied to SOP content."
+            ),
+            prioritized_ai_roadmap=(
+                "0-30 days: instrumentation and baseline KPI tracking; 31-60 days: launch one "
+                "customer-facing triage/copilot pilot; 61-90 days: production hardening, governance, "
+                "and rollout plan based on measured impact."
             ),
             suggested_engagement_angle=(
                 "Recommend a phased engagement starting with a discovery workshop, baseline KPI "

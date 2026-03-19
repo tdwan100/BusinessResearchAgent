@@ -134,7 +134,9 @@ class WorkflowEngine:
         task = Task(
             description=(
                 "Identify likely operational bottlenecks and map each one to concrete AI "
-                "automation opportunities. Emphasize feasibility and likely business impact.\n"
+                "automation opportunities. Avoid generic advice: tie each opportunity to specific "
+                "signals from the provided pages/enrichment and state why it is differentiated. "
+                "Include practical KPIs and implementation constraints.\n"
                 "Return valid JSON matching this schema exactly: "
                 f"{OpportunityOutput.model_json_schema()}\n"
                 f"Research: {research.model_dump_json()}\n"
@@ -158,7 +160,10 @@ class WorkflowEngine:
         task = Task(
             description=(
                 "Synthesize a polished report for business stakeholders. Keep language clear, "
-                "credible, and actionable. Include uncertainty language where needed.\n"
+                "credible, and actionable. Avoid redundancy and avoid generic consulting phrasing. "
+                "Highlight non-obvious signals a typical reader may overlook, and provide a "
+                "prioritized 90-day roadmap (quick wins first) with expected KPI impact. Include "
+                "uncertainty language where needed.\n"
                 "Return valid JSON matching this schema exactly: "
                 f"{FinalReport.model_json_schema()}\n"
                 f"Research: {research.model_dump_json()}\n"
