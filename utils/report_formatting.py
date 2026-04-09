@@ -15,6 +15,7 @@ def to_markdown(report: FinalReport) -> str:
         ("Overlooked Signals / Non-Obvious Insights", report.overlooked_signals),
         ("Likely Operational Bottlenecks", report.likely_operational_bottlenecks),
         ("AI Automation Opportunities", report.ai_automation_opportunities),
+        ("Recommended First Automation Pilot", report.recommended_first_automation_pilot),
         ("90-Day Prioritized AI Roadmap", report.prioritized_ai_roadmap),
         ("Suggested Engagement Angle", report.suggested_engagement_angle),
     ]

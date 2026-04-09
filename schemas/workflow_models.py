@@ -74,6 +74,7 @@ class FinalReport(BaseModel):
     overlooked_signals: str
     likely_operational_bottlenecks: str
     ai_automation_opportunities: str
+    recommended_first_automation_pilot: str
     prioritized_ai_roadmap: str
     suggested_engagement_angle: str
     disclaimer: str
