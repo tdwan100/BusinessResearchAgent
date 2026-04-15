@@ -92,6 +92,11 @@ class WorkflowService:
                 "Practical opportunities likely include AI-assisted inbound triage, proposal "
                 "drafting copilots, and internal knowledge assistants tied to SOP content."
             ),
+            recommended_first_automation_pilot=(
+                "Start with an AI-assisted document generation workflow for the highest-volume "
+                "customer deliverable. Use structured intake fields, standardized templates, and "
+                "human-in-the-loop review to reduce cycle time while preserving quality controls."
+            ),
             prioritized_ai_roadmap=(
                 "0-30 days: instrumentation and baseline KPI tracking; 31-60 days: launch one "
                 "customer-facing triage/copilot pilot; 61-90 days: production hardening, governance, "
