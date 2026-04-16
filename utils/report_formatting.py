@@ -2,32 +2,30 @@
 
 from __future__ import annotations
 
+import re
+
 from schemas.workflow_models import FinalReport
 
-RECOMMENDED_PILOT_SECTION = """## Recommended First Automation Pilot
+AGENTIC_APPROACH_NOTE = (
+    "Our multi-agent AI pipeline gathers, analyzes, and synthesizes company data to produce "
+    "these actionable insights."
+)
 
-Workflow: Employment Verification Document Generation
 
-Current State:
-Verification documents are manually created and customized for each client, leading to inconsistencies and significant time investment.
+def _bold_percentages(text: str) -> str:
+    return re.sub(r"(?<!\*)\b\d{1,3}\s*[–-]\s*\d{1,3}%\b(?!\*)", lambda m: f"**{m.group(0)}**", text)
 
-Proposed System:
-Develop an AI-assisted document generation pipeline that:
 
-- takes structured user inputs (role, company, timeline)
-- generates standardized verification documents
-- enforces formatting and consistency rules
-- logs outputs for internal review and quality control
+def to_bulleted_markdown(text: str) -> str:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if not lines:
+        return text
 
-Expected Impact:
-
-- Reduce manual effort by ~60–80%
-- Improve consistency and quality of outputs
-- Enable higher client throughput without proportional staffing increases
-
-Why This First:
-This workflow is repetitive, high-frequency, and central to the company’s service offering, making it the highest-leverage starting point for automation.
-"""
+    bullet_lines: list[str] = []
+    for line in lines:
+        cleaned = re.sub(r"^[-*]\s+", "", line)
+        bullet_lines.append(f"- {cleaned}")
+    return "\n".join(bullet_lines)
 
 
 def to_markdown(report: FinalReport) -> str:
@@ -38,17 +36,22 @@ def to_markdown(report: FinalReport) -> str:
         ("Target Market", report.target_market),
         ("Market Positioning", report.market_positioning),
         ("Overlooked Signals / Non-Obvious Insights", report.overlooked_signals),
-        ("Likely Operational Bottlenecks", report.likely_operational_bottlenecks),
-        ("AI Automation Opportunities", report.ai_automation_opportunities),
-        ("Recommended Pilot (Company-Specific)", report.recommended_first_automation_pilot),
+        ("Current Pain Points", report.likely_operational_bottlenecks),
+        ("AI Automation Opportunities", to_bulleted_markdown(report.ai_automation_opportunities)),
         ("90-Day Prioritized AI Roadmap", report.prioritized_ai_roadmap),
         ("Suggested Engagement Angle", report.suggested_engagement_angle),
     ]
 
-    lines = ["# AI Business Workflow Analyst Report", ""]
+    lines = ["# AI Business Workflow Analyst Report", "", f"> {AGENTIC_APPROACH_NOTE}", ""]
     for heading, body in sections:
-        lines.extend([f"## {heading}", body.strip(), ""])
+        lines.extend([f"## {heading}", _bold_percentages(body.strip()), ""])
 
-    lines.extend([RECOMMENDED_PILOT_SECTION.strip(), ""])
+    lines.extend(
+        [
+            "## Recommended First Automation Pilot",
+            _bold_percentages(to_bulleted_markdown(report.recommended_first_automation_pilot.strip())),
+            "",
+        ]
+    )
     lines.extend(["---", f"*{report.disclaimer.strip()}*"])
     return "\n".join(lines)
