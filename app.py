@@ -9,7 +9,7 @@ import streamlit as st
 from services.workflow_service import WorkflowService
 from schemas.workflow_models import FinalReport
 from utils.config import load_runtime_config, missing_api_key_message
-from utils.report_formatting import RECOMMENDED_PILOT_SECTION, to_markdown
+from utils.report_formatting import AGENTIC_APPROACH_NOTE, to_bulleted_markdown, to_markdown
 
 
 st.set_page_config(
@@ -50,21 +50,21 @@ def render_report(report: FinalReport) -> None:
         unsafe_allow_html=True,
     )
 
-    st.markdown("### Strategic Snapshot")
+    st.markdown("### 📊 Strategic Snapshot")
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown('<div class="highlight-box">', unsafe_allow_html=True)
-        st.markdown('<span class="section-chip">Executive Summary</span>', unsafe_allow_html=True)
+        st.markdown('<span class="section-chip">✅ Executive Summary</span>', unsafe_allow_html=True)
         st.markdown(report.executive_summary)
         st.markdown("</div>", unsafe_allow_html=True)
     with c2:
         st.markdown('<div class="highlight-box">', unsafe_allow_html=True)
-        st.markdown('<span class="section-chip">Target Market</span>', unsafe_allow_html=True)
+        st.markdown('<span class="section-chip">📊 Target Market</span>', unsafe_allow_html=True)
         st.markdown(report.target_market)
         st.markdown("</div>", unsafe_allow_html=True)
     with c3:
         st.markdown('<div class="highlight-box">', unsafe_allow_html=True)
-        st.markdown('<span class="section-chip">Market Positioning</span>', unsafe_allow_html=True)
+        st.markdown('<span class="section-chip">⚡ Market Positioning</span>', unsafe_allow_html=True)
         st.markdown(report.market_positioning)
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -79,28 +79,28 @@ def render_report(report: FinalReport) -> None:
         )
     with tab_operations:
         st.container(border=True).markdown(
-            f"#### Likely Operational Bottlenecks\n{report.likely_operational_bottlenecks}"
+            f"#### Current Pain Points\n{report.likely_operational_bottlenecks}"
         )
         st.container(border=True).markdown(
-            f"#### AI Automation Opportunities\n{report.ai_automation_opportunities}"
+            f"#### ⚡ AI Automation Opportunities\n{to_bulleted_markdown(report.ai_automation_opportunities)}"
         )
     with tab_execution:
+        st.container(border=True).markdown(f"#### 📊 90-Day Prioritized AI Roadmap\n{report.prioritized_ai_roadmap}")
+        st.container(border=True).markdown(f"#### ✅ Suggested Engagement Angle\n{report.suggested_engagement_angle}")
         st.container(border=True).markdown(
-            f"#### Recommended Pilot (Company-Specific)\n{report.recommended_first_automation_pilot}"
+            f"#### ✅ Recommended First Automation Pilot\n"
+            f"{to_bulleted_markdown(report.recommended_first_automation_pilot)}"
         )
-        st.container(border=True).markdown(f"#### 90-Day Prioritized AI Roadmap\n{report.prioritized_ai_roadmap}")
-        st.container(border=True).markdown(f"#### Suggested Engagement Angle\n{report.suggested_engagement_angle}")
 
     st.markdown("---")
-    st.container(border=True).markdown(RECOMMENDED_PILOT_SECTION)
     st.caption(report.disclaimer)
 
 
 st.title("AI Business Workflow Analyst")
 st.caption(
-    "Analyze a company website with a multi-agent workflow to identify likely pain points "
-    "and concrete AI automation opportunities."
+    "Analyze a company website to identify current pain points and concrete AI automation opportunities."
 )
+st.caption(AGENTIC_APPROACH_NOTE)
 
 with st.sidebar:
     st.subheader("Input")
