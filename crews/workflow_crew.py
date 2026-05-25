@@ -27,8 +27,8 @@ class WorkflowInputs:
 
 
 class WorkflowEngine:
-    def __init__(self) -> None:
-        self.agent_factory = AgentFactory()
+    def __init__(self, model_name: str | None = None) -> None:
+        self.agent_factory = AgentFactory(model_name=model_name)
         self.fetcher = WebsiteFetcher()
         self.selector = PageSelector()
         self.cleaner = TextCleaner()

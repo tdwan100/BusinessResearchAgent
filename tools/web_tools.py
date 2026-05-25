@@ -52,6 +52,28 @@ class WebsiteFetcher:
 
         return WebPage(url=url, title=title, text=text)
 
+    def extract_preview_image(self, url: str) -> str | None:
+        """Return a likely representative image URL from a page (og/twitter/meta/img fallback)."""
+        html = self.fetch_html(url)
+        soup = BeautifulSoup(html, "html.parser")
+
+        meta_candidates = [
+            ("property", "og:image"),
+            ("name", "twitter:image"),
+            ("property", "og:image:url"),
+        ]
+        for attr, key in meta_candidates:
+            tag = soup.find("meta", attrs={attr: key})
+            if tag and tag.get("content"):
+                return urljoin(url, tag["content"].strip())
+
+        for img in soup.find_all("img", src=True):
+            src = img.get("src", "").strip()
+            if src:
+                return urljoin(url, src)
+
+        return None
+
 
 class PageSelector:
     """Selects likely high-signal pages from homepage links."""
