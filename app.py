@@ -7,6 +7,7 @@ import re
 import streamlit as st
 
 from services.workflow_service import WorkflowService
+from tools.web_tools import WebsiteFetcher
 from utils.config import load_runtime_config, missing_api_key_message
 from utils.report_formatting import to_markdown
 
@@ -23,7 +24,7 @@ def _valid_url(url: str) -> bool:
 
 
 def render_report(markdown_report: str) -> None:
-    st.markdown(markdown_report)
+    st.markdown(markdown_report, unsafe_allow_html=True)
 
 
 st.title("AI Business Workflow Analyst")
@@ -40,6 +41,7 @@ with st.sidebar:
         "Optional industry/context",
         placeholder="Anything useful: vertical, geography, business model, constraints...",
     )
+    model_name = st.text_input("Model override (optional)", placeholder="e.g., gpt-5.5")
     run_clicked = st.button("Run Analysis", type="primary", use_container_width=True)
 
     st.caption("LLM key env var: `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY` / `GROQ_API_KEY`).")
@@ -59,8 +61,8 @@ if run_clicked:
         st.error("Please provide both company name and website URL.")
     elif not _valid_url(website_url):
         st.error("Website URL must start with http:// or https://")
-    else:
-        service = WorkflowService()
+else:
+        service = WorkflowService(model_name=model_name.strip() or None)
         progress_box = st.container(border=True)
         progress_bar = progress_box.progress(0)
         status_placeholder = progress_box.empty()
@@ -91,6 +93,17 @@ if run_clicked:
 
 if st.session_state.report_markdown:
     st.subheader("Final Report")
+
+    with st.expander("Brand / Website Image", expanded=True):
+        try:
+            image_url = WebsiteFetcher().extract_preview_image(website_url)
+            if image_url:
+                st.image(image_url, caption="Image pulled from company website", use_container_width=True)
+            else:
+                st.caption("No representative image found on the provided website.")
+        except Exception:
+            st.caption("Could not fetch a website image for this report.")
+
     render_report(st.session_state.report_markdown)
 
     st.download_button(
