@@ -23,7 +23,7 @@ def _valid_url(url: str) -> bool:
 
 
 def render_report(markdown_report: str) -> None:
-    st.markdown(markdown_report)
+    st.markdown(markdown_report, unsafe_allow_html=True)
 
 
 st.title("AI Business Workflow Analyst")
