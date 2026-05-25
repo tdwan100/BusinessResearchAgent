@@ -7,6 +7,7 @@ import re
 import streamlit as st
 
 from services.workflow_service import WorkflowService
+from tools.web_tools import WebsiteFetcher
 from utils.config import load_runtime_config, missing_api_key_message
 from utils.report_formatting import to_markdown
 
@@ -23,7 +24,7 @@ def _valid_url(url: str) -> bool:
 
 
 def render_report(markdown_report: str) -> None:
-    st.markdown(markdown_report)
+    st.markdown(markdown_report, unsafe_allow_html=True)
 
 
 st.title("AI Business Workflow Analyst")
@@ -42,7 +43,7 @@ with st.sidebar:
     )
     run_clicked = st.button("Run Analysis", type="primary", use_container_width=True)
 
-    st.caption("LLM key env var: `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY` / `GROQ_API_KEY`).")
+    st.caption("LLM env vars: `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY` / `GROQ_API_KEY`) and optional `LLM_MODEL`.")
 
 runtime_config = load_runtime_config()
 
@@ -60,7 +61,7 @@ if run_clicked:
     elif not _valid_url(website_url):
         st.error("Website URL must start with http:// or https://")
     else:
-        service = WorkflowService()
+        service = WorkflowService(model_name=runtime_config.llm_model)
         progress_box = st.container(border=True)
         progress_bar = progress_box.progress(0)
         status_placeholder = progress_box.empty()
@@ -91,6 +92,17 @@ if run_clicked:
 
 if st.session_state.report_markdown:
     st.subheader("Final Report")
+
+    with st.expander("Brand / Website Image", expanded=True):
+        try:
+            image_url = WebsiteFetcher().extract_preview_image(website_url)
+            if image_url:
+                st.image(image_url, caption="Image pulled from company website", use_container_width=True)
+            else:
+                st.caption("No representative image found on the provided website.")
+        except Exception:
+            st.caption("Could not fetch a website image for this report.")
+
     render_report(st.session_state.report_markdown)
 
     st.download_button(

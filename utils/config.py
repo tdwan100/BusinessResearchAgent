@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 class RuntimeConfig:
     llm_api_key: str | None
     llm_provider: str
+    llm_model: str | None
 
 
 def load_runtime_config() -> RuntimeConfig:
@@ -23,13 +24,25 @@ def load_runtime_config() -> RuntimeConfig:
     load_dotenv()
 
     if os.getenv("OPENAI_API_KEY"):
-        return RuntimeConfig(llm_api_key=os.getenv("OPENAI_API_KEY"), llm_provider="openai")
+        return RuntimeConfig(
+            llm_api_key=os.getenv("OPENAI_API_KEY"),
+            llm_provider="openai",
+            llm_model=os.getenv("LLM_MODEL"),
+        )
     if os.getenv("ANTHROPIC_API_KEY"):
-        return RuntimeConfig(llm_api_key=os.getenv("ANTHROPIC_API_KEY"), llm_provider="anthropic")
+        return RuntimeConfig(
+            llm_api_key=os.getenv("ANTHROPIC_API_KEY"),
+            llm_provider="anthropic",
+            llm_model=os.getenv("LLM_MODEL"),
+        )
     if os.getenv("GROQ_API_KEY"):
-        return RuntimeConfig(llm_api_key=os.getenv("GROQ_API_KEY"), llm_provider="groq")
+        return RuntimeConfig(
+            llm_api_key=os.getenv("GROQ_API_KEY"),
+            llm_provider="groq",
+            llm_model=os.getenv("LLM_MODEL"),
+        )
 
-    return RuntimeConfig(llm_api_key=None, llm_provider="unconfigured")
+    return RuntimeConfig(llm_api_key=None, llm_provider="unconfigured", llm_model=os.getenv("LLM_MODEL"))
 
 
 def missing_api_key_message() -> str:
