@@ -27,8 +27,8 @@ class WorkflowInputs:
 
 
 class WorkflowEngine:
-    def __init__(self) -> None:
-        self.agent_factory = AgentFactory()
+    def __init__(self, model_name: str | None = None, llm_provider: str = "openai") -> None:
+        self.agent_factory = AgentFactory(model_name=model_name, llm_provider=llm_provider)
         self.fetcher = WebsiteFetcher()
         self.selector = PageSelector()
         self.cleaner = TextCleaner()
@@ -159,10 +159,10 @@ class WorkflowEngine:
         agent = self.agent_factory.build_report_synthesizer_agent()
         task = Task(
             description=(
-                "Synthesize a polished report for business stakeholders. Keep language clear, "
+                "Synthesize a polished report for business stakeholders. Keep language clear, non-technical, "
                 "credible, and actionable. Avoid redundancy and avoid generic consulting phrasing. "
                 "Highlight non-obvious signals a typical reader may overlook, and provide a "
-                "prioritized 90-day roadmap (quick wins first) with expected KPI impact. Include "
+                "prioritized 90-day roadmap (quick wins first) with expected KPI impact. Format for easy scanning using short sections, bullets, and explicit action items. Include "
                 "uncertainty language where needed.\n"
                 "Return valid JSON matching this schema exactly: "
                 f"{FinalReport.model_json_schema()}\n"
