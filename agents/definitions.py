@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from crewai import Agent
+from crewai import Agent, LLM
 
 
 class AgentFactory:
-    def __init__(self, model_name: str | None = None) -> None:
+    def __init__(self, model_name: str | None = None, llm_provider: str = "openai") -> None:
         self.model_name = model_name.strip() if model_name else None
+        self.llm_provider = llm_provider
 
     def _agent_kwargs(self) -> dict[str, object]:
         kwargs: dict[str, object] = {
@@ -15,7 +16,7 @@ class AgentFactory:
             "allow_delegation": False,
         }
         if self.model_name:
-            kwargs["llm"] = self.model_name
+            kwargs["llm"] = LLM(model=self.model_name, provider=self.llm_provider)
         return kwargs
 
     def build_research_agent(self) -> Agent:

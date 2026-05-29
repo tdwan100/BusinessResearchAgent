@@ -27,8 +27,8 @@ class WorkflowInputs:
 
 
 class WorkflowEngine:
-    def __init__(self, model_name: str | None = None) -> None:
-        self.agent_factory = AgentFactory(model_name=model_name)
+    def __init__(self, model_name: str | None = None, llm_provider: str = "openai") -> None:
+        self.agent_factory = AgentFactory(model_name=model_name, llm_provider=llm_provider)
         self.fetcher = WebsiteFetcher()
         self.selector = PageSelector()
         self.cleaner = TextCleaner()

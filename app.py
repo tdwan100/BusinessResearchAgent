@@ -63,7 +63,10 @@ if run_clicked:
     elif not _valid_url(website_url):
         st.error("Website URL must start with http:// or https://")
     else:
-        service = WorkflowService(model_name=runtime_config.llm_model)
+        service = WorkflowService(
+            model_name=runtime_config.llm_model,
+            llm_provider=runtime_config.llm_provider,
+        )
         progress_box = st.container(border=True)
         progress_bar = progress_box.progress(0)
         status_placeholder = progress_box.empty()
@@ -96,20 +99,16 @@ if run_clicked:
 if st.session_state.report_markdown:
     st.subheader("Final Report")
 
-    with st.expander("Brand Identity", expanded=True):
-        try:
-            identity_icon_url = WebsiteFetcher().extract_site_identity_image(website_url)
-            if identity_icon_url:
-                left, right = st.columns([1, 5])
-                with left:
-                    st.image(identity_icon_url, width=64)
-                with right:
-                    st.markdown(f"**{st.session_state.report_company_name or company_name.strip()}**")
-                    st.caption("Browser-tab brand icon (favicon/apple-touch-icon)")
-            else:
-                st.caption("No browser-tab identity image found on the provided website.")
-        except Exception:
-            st.caption("Could not fetch a browser-tab identity image for this report.")
+    try:
+        identity_icon_url = WebsiteFetcher().extract_site_identity_image(website_url)
+        if identity_icon_url:
+            left, right = st.columns([1, 5])
+            with left:
+                st.image(identity_icon_url, width=64)
+            with right:
+                st.markdown(f"**{st.session_state.report_company_name or company_name.strip()}**")
+    except Exception:
+        pass
 
     render_report(st.session_state.report_markdown)
 
