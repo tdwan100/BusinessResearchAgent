@@ -54,6 +54,8 @@ if not runtime_config.llm_api_key:
 
 if "report_markdown" not in st.session_state:
     st.session_state.report_markdown = ""
+if "report_company_name" not in st.session_state:
+    st.session_state.report_company_name = ""
 
 if run_clicked:
     if not company_name.strip() or not website_url.strip():
@@ -88,20 +90,26 @@ if run_clicked:
         )
 
         st.session_state.report_markdown = to_markdown(report)
+        st.session_state.report_company_name = company_name.strip()
         status_placeholder.success("Report ready.")
 
 if st.session_state.report_markdown:
     st.subheader("Final Report")
 
-    with st.expander("Brand / Website Image", expanded=True):
+    with st.expander("Brand Identity", expanded=True):
         try:
-            image_url = WebsiteFetcher().extract_preview_image(website_url)
-            if image_url:
-                st.image(image_url, caption="Image pulled from company website", use_container_width=True)
+            identity_icon_url = WebsiteFetcher().extract_site_identity_image(website_url)
+            if identity_icon_url:
+                left, right = st.columns([1, 5])
+                with left:
+                    st.image(identity_icon_url, width=64)
+                with right:
+                    st.markdown(f"**{st.session_state.report_company_name or company_name.strip()}**")
+                    st.caption("Browser-tab brand icon (favicon/apple-touch-icon)")
             else:
-                st.caption("No representative image found on the provided website.")
+                st.caption("No browser-tab identity image found on the provided website.")
         except Exception:
-            st.caption("Could not fetch a website image for this report.")
+            st.caption("Could not fetch a browser-tab identity image for this report.")
 
     render_report(st.session_state.report_markdown)
 
