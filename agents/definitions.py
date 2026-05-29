@@ -2,10 +2,23 @@
 
 from __future__ import annotations
 
-from crewai import Agent
+from crewai import Agent, LLM
 
 
 class AgentFactory:
+    def __init__(self, model_name: str | None = None, llm_provider: str = "openai") -> None:
+        self.model_name = model_name.strip() if model_name else None
+        self.llm_provider = llm_provider
+
+    def _agent_kwargs(self) -> dict[str, object]:
+        kwargs: dict[str, object] = {
+            "verbose": False,
+            "allow_delegation": False,
+        }
+        if self.model_name:
+            kwargs["llm"] = LLM(model=self.model_name, provider=self.llm_provider)
+        return kwargs
+
     def build_research_agent(self) -> Agent:
         return Agent(
             role="Research Agent",
@@ -17,8 +30,7 @@ class AgentFactory:
                 "You are a meticulous B2B analyst who distinguishes observed facts from "
                 "inference and always cites confidence limits."
             ),
-            verbose=False,
-            allow_delegation=False,
+            **self._agent_kwargs(),
         )
 
     def build_offering_market_agent(self) -> Agent:
@@ -32,8 +44,7 @@ class AgentFactory:
                 "You are a go-to-market strategist skilled at identifying products, buyer "
                 "segments, and commercial models from sparse public information."
             ),
-            verbose=False,
-            allow_delegation=False,
+            **self._agent_kwargs(),
         )
 
     def build_pain_point_agent(self) -> Agent:
@@ -47,8 +58,7 @@ class AgentFactory:
                 "You are an operations consultant who prioritizes feasible, high-ROI AI "
                 "use cases while calling out risk considerations."
             ),
-            verbose=False,
-            allow_delegation=False,
+            **self._agent_kwargs(),
         )
 
     def build_report_synthesizer_agent(self) -> Agent:
@@ -62,6 +72,5 @@ class AgentFactory:
                 "You are a senior strategy advisor who turns analytical inputs into concise "
                 "decision-ready narratives."
             ),
-            verbose=False,
-            allow_delegation=False,
+            **self._agent_kwargs(),
         )
