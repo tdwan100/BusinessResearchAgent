@@ -11,8 +11,8 @@ ProgressCallback = Callable[[str, str], None]
 
 
 class WorkflowService:
-    def __init__(self) -> None:
-        self.engine = WorkflowEngine()
+    def __init__(self, model_name: str | None = None, llm_provider: str = "openai") -> None:
+        self.engine = WorkflowEngine(model_name=model_name, llm_provider=llm_provider)
 
     def run(
         self,
