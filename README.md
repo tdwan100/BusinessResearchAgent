@@ -54,3 +54,5 @@ streamlit run app.py
 ```
 
 > Note: CrewAI will require an accessible LLM provider configuration in your environment.
+
+https://www.linkedin.com/posts/tanner-d-651970197_over-the-past-week-i-built-an-ai-driven-business-activity-7467700983876317184-bUWh?utm_source=share&utm_medium=member_desktop&rcm=ACoAAC49Fp0Bc-Ct_JDYJwHEvxBSEjT7KbLIxOU
