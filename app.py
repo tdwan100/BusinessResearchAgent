@@ -43,7 +43,6 @@ with st.sidebar:
     )
     run_clicked = st.button("Run Analysis", type="primary", use_container_width=True)
 
-    st.caption("LLM env vars: `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY` / `GROQ_API_KEY`) and optional `LLM_MODEL`.")
 
 runtime_config = load_runtime_config()
 
